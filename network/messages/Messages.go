@@ -240,7 +240,8 @@ func (msg *SwiftIdentificationSuccessMessage) Unpack(reader io.IBinaryReader, le
 ///////////////////////////////////////////////
 
 type SelectedServerDataCustomMessage struct {
-
+    Username string
+    Ticket []byte
 }
 
 func (msg *SelectedServerDataCustomMessage) ID() int {
@@ -256,29 +257,54 @@ func (msg *SelectedServerDataCustomMessage) Pack(writer io.IBinaryWriter) {
 }
 
 func (msg *SelectedServerDataCustomMessage) Unpack(reader io.IBinaryReader, length uint32) {
+    msg.Username, _ = reader.ReadUTF()
+    ticketLength, _ := reader.ReadVarInt()
+    msg.Ticket, _ = reader.ReadBytes(uint32(ticketLength))
+}
+
+///////////////////////////////////////////////
+
+type AuthenticationTicketCustomMessage struct {
+    Ticket string
+}
+
+func (msg *AuthenticationTicketCustomMessage) ID() int {
+    return 674
+}
+
+func (msg *AuthenticationTicketCustomMessage) GetName() string {
+    return "AuthenticationTicketCustomMessage"
+}
+
+func (msg *AuthenticationTicketCustomMessage) Pack(writer io.IBinaryWriter) {
+    writer.WriteUTF("1")
+    //39601055477fd192ff2f3e2104035633
+    writer.WriteUTF(msg.Ticket+"06D49632C9DC9BCB62AEAEF99612BA6B")
+}
+
+func (msg *AuthenticationTicketCustomMessage) Unpack(reader io.IBinaryReader, length uint32) {
     reader.ReadBytes(length)
 }
 
 ///////////////////////////////////////////////
 
-type SelectedServerDataAnswerMessage struct {
+type SwiftStopBotMessage struct {
 
 }
 
-func (msg *SelectedServerDataAnswerMessage) ID() int {
-    return 674
+func (msg *SwiftStopBotMessage) ID() int {
+    return 777
 }
 
-func (msg *SelectedServerDataAnswerMessage) GetName() string {
-    return "SelectedServerDataAnswerMessage"
+func (msg *SwiftStopBotMessage) GetName() string {
+    return "SwiftStopBotMessage"
 }
 
-func (msg *SelectedServerDataAnswerMessage) Pack(writer io.IBinaryWriter) {
-    writer.WriteBytes([]byte{0x00,0x01,0x31})
-    writer.WriteUTF("39601055477fd192ff2f3e210403563306D49632C9DC9BCB62AEAEF99612BA6B")
+func (msg *SwiftStopBotMessage) Pack(writer io.IBinaryWriter) {
+
 }
 
-func (msg *SelectedServerDataAnswerMessage) Unpack(reader io.IBinaryReader, length uint32) {
+func (msg *SwiftStopBotMessage) Unpack(reader io.IBinaryReader, length uint32) {
     reader.ReadBytes(length)
 }
 

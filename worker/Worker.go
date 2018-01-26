@@ -4,6 +4,9 @@ import (
     "BotServer/network/messages"
     "BotServer/network"
     . "BotServer/utils/log"
+    "crypto/aes"
+    "crypto/cipher"
+    "encoding/hex"
 )
 
 func Process(client network.IClient, msg messages.INetworkMessage) {
@@ -24,8 +27,29 @@ func Process(client network.IClient, msg messages.INetworkMessage) {
         client.Send(&messages.SwiftPingMessage{})
         return
     case *messages.SelectedServerDataCustomMessage:
-        //ssdcm, _ := msg.(*messages.SelectedServerDataCustomMessage)
-        client.Send(&messages.SelectedServerDataAnswerMessage{})
+        ssdcm, _ := msg.(*messages.SelectedServerDataCustomMessage)
+        Info.Printf("Account: %s", ssdcm.Username)
+
+        plaintext := make([]byte, len(ssdcm.Ticket))
+        block, _ := aes.NewCipher([]byte{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0})
+
+        iv := make([]byte, aes.BlockSize)
+        ciphertext := ssdcm.Ticket
+
+        /*iv := ciphertext[:aes.BlockSize]
+        ciphertext = ciphertext[aes.BlockSize:]*/
+
+        mode := cipher.NewCBCEncrypter(block, iv)
+        mode.CryptBlocks(plaintext, ciphertext)
+
+        ticket := hex.EncodeToString(plaintext)
+
+        Debug.Printf("TICKET: %X", ssdcm.Ticket)
+        Debug.Printf("IV: %X", iv)
+        Debug.Printf("CIPHER: %X", ciphertext)
+        Debug.Printf("TICKET: %s", ticket)
+
+        client.Send(&messages.AuthenticationTicketCustomMessage{ticket})
         client.Send(&messages.SwiftPingMessage{})
         return
     case *messages.BakeryAddAccountMessage:
@@ -35,6 +59,12 @@ func Process(client network.IClient, msg messages.INetworkMessage) {
     case *messages.BakeryRawDataMessage:
         client.Send(&messages.CheckIntegrityMessage{})
         return
+
+    // Useless messages
+    case *messages.SwiftPongMessage:
+    case *messages.SwiftStopBotMessage:
+        return
     }
+
     Debug.Printf("No frame handle message %s (%d)", msg.GetName(), msg.ID())
 }

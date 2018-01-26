@@ -20,6 +20,7 @@ func (mr *MessageReceiver) register() {
 
     mr.messagesTypes[666] = reflect.TypeOf(SwiftIdentificationMessage{})
     mr.messagesTypes[747] = reflect.TypeOf(SelectedServerDataCustomMessage{})
+    mr.messagesTypes[777] = reflect.TypeOf(SwiftStopBotMessage{})
     mr.messagesTypes[998] = reflect.TypeOf(SwiftPongMessage{})
     mr.messagesTypes[16001] = reflect.TypeOf(BakeryRawDataMessage{})
     mr.messagesTypes[16004] = reflect.TypeOf(BakeryIdentificationMessage{})
