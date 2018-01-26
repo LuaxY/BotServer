@@ -4,6 +4,7 @@ import (
     "net"
     . "BotServer/utils/log"
     "BotServer/network/client"
+    "BotServer/network/messages"
 )
 
 func SwiftServer() {
@@ -26,7 +27,8 @@ func SwiftServer() {
 
         Info.Print("New Swift bot")
 
-        c := client.NewClient(conn)
+        c := client.NewClient(client.SWIFTBOT, conn)
+        c.Send(&messages.SwiftPingMessage{})
         go c.Receive()
     }
 }

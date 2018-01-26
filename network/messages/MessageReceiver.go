@@ -18,8 +18,12 @@ func NewMessageReceiver() *MessageReceiver {
 func (mr *MessageReceiver) register() {
     mr.messagesTypes = make(map[int]reflect.Type)
 
-    mr.messagesTypes[16003] = reflect.TypeOf(BakeryHelloConnectMessage{})
+    mr.messagesTypes[666] = reflect.TypeOf(SwiftIdentificationMessage{})
+    mr.messagesTypes[747] = reflect.TypeOf(SelectedServerDataCustomMessage{})
+    mr.messagesTypes[998] = reflect.TypeOf(SwiftPongMessage{})
+    mr.messagesTypes[16001] = reflect.TypeOf(BakeryRawDataMessage{})
     mr.messagesTypes[16004] = reflect.TypeOf(BakeryIdentificationMessage{})
+    mr.messagesTypes[16007] = reflect.TypeOf(BakeryAddAccountMessage{})
 }
 
 func (mr *MessageReceiver) Parse(reader io.IBinaryReader, id uint16, length uint32) INetworkMessage {

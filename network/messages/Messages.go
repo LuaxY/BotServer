@@ -23,8 +23,10 @@ func (msg *BakeryHelloConnectMessage) Pack(writer io.IBinaryWriter) {
 }
 
 func (msg *BakeryHelloConnectMessage) Unpack(reader io.IBinaryReader, length uint32) {
-
+    reader.ReadBytes(length)
 }
+
+///////////////////////////////////////////////
 
 type BakeryIdentificationMessage struct {
     Login string
@@ -52,6 +54,8 @@ func (msg *BakeryIdentificationMessage) Unpack(reader io.IBinaryReader, length u
     reader.ReadByte() // unknown
 }
 
+///////////////////////////////////////////////
+
 type BakeryIdentificationSuccessMessage struct {
     Username string
     Role int8 // Role ? user 1 | admin 2
@@ -68,9 +72,234 @@ func (msg *BakeryIdentificationSuccessMessage) GetName() string {
 func (msg *BakeryIdentificationSuccessMessage) Pack(writer io.IBinaryWriter) {
     writer.WriteUTF(msg.Username)
     writer.WriteByte(msg.Role)
-    writer.WriteBytes([]byte{0x42,0x76,0xED,0x4C,0xD9,0xF1,0x80,0x00,0x00,0x00,0x00,0x77,0x00})
+    writer.WriteBytes([]byte{0x42,0x76,0xED,0x4C,0xD9,0xF1,0x80,0x00,0x00,0x00,0x00,0x77,0x00}) // date & more
 }
 
 func (msg *BakeryIdentificationSuccessMessage) Unpack(reader io.IBinaryReader, length uint32) {
+    reader.ReadBytes(length)
+}
 
+///////////////////////////////////////////////
+
+type BakeryAddAccountMessage struct {
+    Account string
+}
+
+func (msg *BakeryAddAccountMessage) ID() int {
+    return 16007
+}
+
+func (msg *BakeryAddAccountMessage) GetName() string {
+    return "BakeryAddAccountMessage"
+}
+
+func (msg *BakeryAddAccountMessage) Pack(writer io.IBinaryWriter) {
+
+}
+
+func (msg *BakeryAddAccountMessage) Unpack(reader io.IBinaryReader, length uint32) {
+    reader.ReadUInt()
+    msg.Account, _ = reader.ReadUTF()
+}
+
+///////////////////////////////////////////////
+
+type BakeryRawDataMessage struct {
+}
+
+func (msg *BakeryRawDataMessage) ID() int {
+    return 16001
+}
+
+func (msg *BakeryRawDataMessage) GetName() string {
+    return "BakeryRawDataMessage"
+}
+
+func (msg *BakeryRawDataMessage) Pack(writer io.IBinaryWriter) {
+
+}
+
+func (msg *BakeryRawDataMessage) Unpack(reader io.IBinaryReader, length uint32) {
+    reader.ReadBytes(length)
+}
+
+///////////////////////////////////////////////
+
+type SwiftPingMessage struct {
+}
+
+func (msg *SwiftPingMessage) ID() int {
+    return 999
+}
+
+func (msg *SwiftPingMessage) GetName() string {
+    return "SwiftPingMessage"
+}
+
+func (msg *SwiftPingMessage) Pack(writer io.IBinaryWriter) {
+
+}
+
+func (msg *SwiftPingMessage) Unpack(reader io.IBinaryReader, length uint32) {
+    reader.ReadBytes(length)
+}
+
+///////////////////////////////////////////////
+
+type SwiftPongMessage struct {
+}
+
+func (msg *SwiftPongMessage) ID() int {
+    return 998
+}
+
+func (msg *SwiftPongMessage) GetName() string {
+    return "SwiftPongMessage"
+}
+
+func (msg *SwiftPongMessage) Pack(writer io.IBinaryWriter) {
+
+}
+
+func (msg *SwiftPongMessage) Unpack(reader io.IBinaryReader, length uint32) {
+    reader.ReadBytes(length)
+}
+
+///////////////////////////////////////////////
+
+type SwiftIdentificationMessage struct {
+    Login string
+    Password string
+}
+
+func (msg *SwiftIdentificationMessage) ID() int {
+    return 666
+}
+
+func (msg *SwiftIdentificationMessage) GetName() string {
+    return "SwiftIdentificationMessage"
+}
+
+func (msg *SwiftIdentificationMessage) Pack(writer io.IBinaryWriter) {
+
+}
+
+func (msg *SwiftIdentificationMessage) Unpack(reader io.IBinaryReader, length uint32) {
+    msg.Login, _ = reader.ReadUTF()
+    msg.Password, _ = reader.ReadUTF()
+}
+
+///////////////////////////////////////////////
+
+type SwiftIdentificationSuccessMessage struct {
+    Nickname string
+    FullAccess bool
+    Motd string
+}
+
+func (msg *SwiftIdentificationSuccessMessage) ID() int {
+    return 667
+}
+
+func (msg *SwiftIdentificationSuccessMessage) GetName() string {
+    return "SwiftIdentificationSuccessMessage"
+}
+
+func (msg *SwiftIdentificationSuccessMessage) Pack(writer io.IBinaryWriter) {
+    writer.WriteBool(true) // State
+    writer.WriteUTF(msg.Nickname) // Pseudo
+    writer.WriteInt(0) // Token
+    writer.WriteBool(msg.FullAccess) // Full Access
+    writer.WriteBool(false) // Instance Full
+    writer.WriteUTF(" " + msg.Motd) // Message of the day (number of bots)
+
+    writer.WriteVarInt(11) // Number of options
+    writer.WriteUTF("desktopAccess")
+    writer.WriteUTF("touchAccess")
+    writer.WriteUTF("optiFight")
+    writer.WriteUTF("optiControl")
+    writer.WriteUTF("craftOther")
+    writer.WriteUTF("sellOther")
+    writer.WriteUTF("floodOther")
+    writer.WriteUTF("secondOther")
+    writer.WriteUTF("optiProtection")
+    writer.WriteUTF("eliteSupport")
+    writer.WriteUTF("mountAcces")
+
+    // Expirations
+    writer.WriteVarInt(11) // Number of expiration
+    for i := 0; i < 11; i++ {
+        writer.WriteLong(0)
+    }
+}
+
+func (msg *SwiftIdentificationSuccessMessage) Unpack(reader io.IBinaryReader, length uint32) {
+    reader.ReadBytes(length)
+}
+
+///////////////////////////////////////////////
+
+type SelectedServerDataCustomMessage struct {
+
+}
+
+func (msg *SelectedServerDataCustomMessage) ID() int {
+    return 747
+}
+
+func (msg *SelectedServerDataCustomMessage) GetName() string {
+    return "SelectedServerDataCustomMessage"
+}
+
+func (msg *SelectedServerDataCustomMessage) Pack(writer io.IBinaryWriter) {
+
+}
+
+func (msg *SelectedServerDataCustomMessage) Unpack(reader io.IBinaryReader, length uint32) {
+    reader.ReadBytes(length)
+}
+
+///////////////////////////////////////////////
+
+type SelectedServerDataAnswerMessage struct {
+
+}
+
+func (msg *SelectedServerDataAnswerMessage) ID() int {
+    return 674
+}
+
+func (msg *SelectedServerDataAnswerMessage) GetName() string {
+    return "SelectedServerDataAnswerMessage"
+}
+
+func (msg *SelectedServerDataAnswerMessage) Pack(writer io.IBinaryWriter) {
+    writer.WriteBytes([]byte{0x00,0x01,0x31})
+    writer.WriteUTF("39601055477fd192ff2f3e210403563306D49632C9DC9BCB62AEAEF99612BA6B")
+}
+
+func (msg *SelectedServerDataAnswerMessage) Unpack(reader io.IBinaryReader, length uint32) {
+    reader.ReadBytes(length)
+}
+
+///////////////////////////////////////////////
+
+type CheckIntegrityMessage struct {
+
+}
+
+func (msg *CheckIntegrityMessage) ID() int {
+    return 6372
+}
+
+func (msg *CheckIntegrityMessage) GetName() string {
+    return "CheckIntegrityMessage"
+}
+
+func (msg *CheckIntegrityMessage) Pack(writer io.IBinaryWriter) {
+    writer.WriteBytes([]byte{0x01,0x00})
+}
+
+func (msg *CheckIntegrityMessage) Unpack(reader io.IBinaryReader, length uint32) {
+    reader.ReadBytes(length)
 }

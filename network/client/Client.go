@@ -10,10 +10,15 @@ import (
 
     "fmt"
     "encoding/hex"
+)
 
+const (
+    MUFIBOT = 1 << iota
+    SWIFTBOT
 )
 
 type Client struct {
+    botType              int
     socket               net.Conn
     parser               *messages.MessageReceiver
     inputBuffer          []byte
@@ -23,8 +28,9 @@ type Client struct {
     splittedPacketLength uint32
 }
 
-func NewClient(conn net.Conn) network.IClient {
+func NewClient(botType int, conn net.Conn) network.IClient {
     var c Client
+    c.botType = botType
     c.socket = conn
     c.parser = messages.NewMessageReceiver()
     return &c
@@ -38,7 +44,9 @@ func (c *Client) Send(msg messages.INetworkMessage) {
 
     writer = io.NewBinaryWriter()
 
-    writer.WriteUInt(0) // Unknown data for Bakery
+    if c.botType == MUFIBOT {
+        writer.WriteUInt(0) // Unknown data for Bakery
+    }
 
     typeLen := computeTypeLen(len(data))
     writer.WriteShort(subComputeStaticHeader(msg.ID(), typeLen))
@@ -102,11 +110,13 @@ func (c *Client) Receive() {
 
 func (c *Client) lowReceive(reader io.IBinaryReader) messages.INetworkMessage {
     if !c.splittedPacket {
-        if reader.BytesAvailable() < 4 {
-            return nil
-        }
+        if c.botType == MUFIBOT {
+            if reader.BytesAvailable() < 4 {
+                return nil
+            }
 
-        reader.ReadUInt()
+            reader.ReadUInt()
+        }
 
         if reader.BytesAvailable() < 2 {
             return nil
@@ -146,7 +156,9 @@ func (c *Client) lowReceive(reader io.IBinaryReader) messages.INetworkMessage {
 
         return msg
     } else {
-        // TODO: read unknown header for Bakery
+        if c.botType == MUFIBOT {
+            // TODO: read unknown header for Bakery
+        }
 
         if c.splittedPacketHeader != 0 {
             c.splittedPacketLength = readMessageLength(c.splittedPacketHeader, reader)
