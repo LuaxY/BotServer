@@ -8,8 +8,8 @@ import (
     "BotServer/network/messages"
     . "BotServer/utils/log"
 
-    "fmt"
-    "encoding/hex"
+    _ "fmt"
+    _ "encoding/hex"
     "time"
 )
 
@@ -23,6 +23,7 @@ type Client struct {
     socket               net.Conn
     parser               *messages.MessageReceiver
     inputBuffer          []byte
+    mufiBotID            uint32
     splittedPacket       bool
     splittedPacketHeader uint16
     splittedPacketID     uint16
@@ -46,7 +47,7 @@ func (c *Client) Send(msg messages.INetworkMessage) {
     writer = io.NewBinaryWriter()
 
     if c.botType == MUFIBOT {
-        writer.WriteUInt(0) // Unknown data for Bakery
+        writer.WriteUInt(c.mufiBotID) // Unknown data for Bakery
     }
 
     typeLen := computeTypeLen(len(data))
@@ -68,7 +69,7 @@ func (c *Client) Send(msg messages.INetworkMessage) {
         writer.WriteBytes(data)
     }
 
-    fmt.Printf("%s", hex.Dump(writer.Data()))
+    //fmt.Printf("%s", hex.Dump(writer.Data()))
 
     time.Sleep(500 * time.Millisecond)
     n, err := c.socket.Write(writer.Data())
@@ -77,7 +78,7 @@ func (c *Client) Send(msg messages.INetworkMessage) {
         Error.Printf("%s", err)
     }
 
-    Info.Printf("[SND] %s (%d) %d bytes", msg.GetName(), msg.ID(), n)
+    Debug.Printf("[SND] %s (%d) %d bytes", msg.GetName(), msg.ID(), n)
 }
 
 func (c *Client) Receive() {
@@ -86,10 +87,10 @@ func (c *Client) Receive() {
     for {
         length, err := c.socket.Read(buffer)
 
-        fmt.Printf("%s", hex.Dump(buffer[:length]))
+        //fmt.Printf("%s", hex.Dump(buffer[:length]))
 
         if err != nil {
-            Error.Printf("Read error: %s", err)
+            //Error.Printf("Read error: %s", err)
             c.socket.Close()
             return
         }
@@ -117,7 +118,7 @@ func (c *Client) lowReceive(reader io.IBinaryReader) messages.INetworkMessage {
                 return nil
             }
 
-            reader.ReadUInt()
+            c.mufiBotID, _ = reader.ReadUInt()
         }
 
         if reader.BytesAvailable() < 2 {
@@ -153,7 +154,7 @@ func (c *Client) lowReceive(reader io.IBinaryReader) messages.INetworkMessage {
         msg := c.parser.Parse(reader, id, length)
 
         if msg != nil {
-            Info.Printf("[RCV] %s (%d) %d bytes", msg.GetName(), msg.ID(), length)
+            Debug.Printf("[RCV] %s (%d) %d bytes", msg.GetName(), msg.ID(), length)
         }
 
         return msg
@@ -175,7 +176,7 @@ func (c *Client) lowReceive(reader io.IBinaryReader) messages.INetworkMessage {
             msg := c.parser.Parse(reader, c.splittedPacketID, c.splittedPacketLength)
 
             if msg != nil {
-                Info.Printf("[RCV] %s (%d) %d bytes", msg.GetName(), msg.ID(), c.splittedPacketLength)
+                Debug.Printf("[RCV] %s (%d) %d bytes", msg.GetName(), msg.ID(), c.splittedPacketLength)
             }
 
             c.splittedPacketHeader = 0
