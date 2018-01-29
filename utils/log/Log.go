@@ -12,13 +12,15 @@ var (
     Info    *log.Logger
     Warning *log.Logger
     Error   *log.Logger
+    Log     *log.Logger
 )
 
 func Init(
     debugHandle io.Writer,
     infoHandle io.Writer,
     warningHandle io.Writer,
-    errorHandle io.Writer) {
+    errorHandle io.Writer,
+    logHandle io.Writer) {
 
     Debug = log.New(debugHandle,
         "DEBUG: ",
@@ -35,4 +37,8 @@ func Init(
     Error = log.New(errorHandle,
         "ERROR: ",
         log.Ldate|log.Ltime|log.Lmicroseconds|log.Lshortfile)
+
+    Log = log.New(logHandle,
+        "",
+        log.Ldate|log.Ltime|log.Lmicroseconds)
 }

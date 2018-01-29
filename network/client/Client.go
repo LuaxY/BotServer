@@ -38,6 +38,10 @@ func NewClient(botType int, conn net.Conn) network.IClient {
     return &c
 }
 
+func (c *Client) GetIP() string {
+    return c.socket.RemoteAddr().String()
+}
+
 func (c *Client) Send(msg messages.INetworkMessage) {
     writer := io.NewBinaryWriter()
     msg.Pack(writer)
