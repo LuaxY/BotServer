@@ -23,12 +23,12 @@ func main() {
 
     go func() {
         defer wg.Done()
-        mufi.MufiServer()
+        mufi.MufiServer("0.0.0.0:6555")
     }()
 
     go func() {
         defer wg.Done()
-        swift.SwiftServer()
+        swift.SwiftServer("0.0.0.0:5557")
     }()
 
     wg.Wait()

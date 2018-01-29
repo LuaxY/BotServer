@@ -7,15 +7,15 @@ import (
     "BotServer/network/messages"
 )
 
-func SwiftServer() {
-    listener, err := net.Listen("tcp", "0.0.0.0:5557")
+func SwiftServer(address string) {
+    listener, err := net.Listen("tcp", address)
 
     if err != nil {
         Error.Fatalf("Unable to listen: %s", err)
     }
 
     defer listener.Close()
-    Info.Print("Start listening Swiftbot")
+    Info.Printf("Start listening Swiftbot on %s", address)
 
     for {
         conn, err := listener.Accept()

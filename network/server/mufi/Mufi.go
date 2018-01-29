@@ -9,8 +9,14 @@ import (
     "BotServer/network/messages"
 )
 
-func MufiServer() {
-    cert, err := loadX509KeyPair("certs/client.crt", "certs/client.key", "Zog1Ri6AWEV9Oe45")
+func MufiServer(address string) {
+    passphrase, err := ioutil.ReadFile("certs/passphrase.txt")
+
+    if err != nil {
+        Error.Fatalf("Unable to load passphrase file: %s", err)
+    }
+
+    cert, err := loadX509KeyPair("certs/client.crt", "certs/client.key", string(passphrase))
 
     if err != nil {
         Error.Fatalf("Unable to load client cert/keys: %s", err)
@@ -31,14 +37,14 @@ func MufiServer() {
         InsecureSkipVerify: true,
     }
 
-    listener, err := tls.Listen("tcp", "0.0.0.0:6555", config)
+    listener, err := tls.Listen("tcp", address, config)
 
     if err != nil {
         Error.Fatalf("Unable to listen: %s", err)
     }
 
     defer listener.Close()
-    Info.Print("Start listening Mufibot")
+    Info.Printf("Start listening Mufibot on %s", address)
 
     for {
         conn, err := listener.Accept()
