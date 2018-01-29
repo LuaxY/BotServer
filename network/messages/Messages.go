@@ -265,6 +265,7 @@ func (msg *SelectedServerDataCustomMessage) Unpack(reader io.IBinaryReader, leng
 ///////////////////////////////////////////////
 
 type AuthenticationTicketCustomMessage struct {
+    Account string
     Ticket string
 }
 
@@ -277,9 +278,8 @@ func (msg *AuthenticationTicketCustomMessage) GetName() string {
 }
 
 func (msg *AuthenticationTicketCustomMessage) Pack(writer io.IBinaryWriter) {
-    writer.WriteUTF("1")
-    //39601055477fd192ff2f3e2104035633
-    writer.WriteUTF(msg.Ticket+"06D49632C9DC9BCB62AEAEF99612BA6B")
+    writer.WriteUTF(msg.Account)
+    writer.WriteUTF(msg.Ticket)
 }
 
 func (msg *AuthenticationTicketCustomMessage) Unpack(reader io.IBinaryReader, length uint32) {

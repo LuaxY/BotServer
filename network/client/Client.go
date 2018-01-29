@@ -10,6 +10,7 @@ import (
 
     "fmt"
     "encoding/hex"
+    "time"
 )
 
 const (
@@ -69,6 +70,7 @@ func (c *Client) Send(msg messages.INetworkMessage) {
 
     fmt.Printf("%s", hex.Dump(writer.Data()))
 
+    time.Sleep(500 * time.Millisecond)
     n, err := c.socket.Write(writer.Data())
 
     if err != nil {
