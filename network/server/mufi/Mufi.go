@@ -9,20 +9,20 @@ import (
     "BotServer/network/messages"
 )
 
-func MufiServer(address string) {
-    passphrase, err := ioutil.ReadFile("certs/passphrase.txt")
+func MufiServer(address, dir string) {
+    passphrase, err := ioutil.ReadFile(dir + "/certs/passphrase.txt")
 
     if err != nil {
         Error.Fatalf("Unable to load passphrase file: %s", err)
     }
 
-    cert, err := loadX509KeyPair("certs/client.crt", "certs/client.key", string(passphrase))
+    cert, err := loadX509KeyPair(dir + "/certs/client.crt", dir + "/certs/client.key", string(passphrase))
 
     if err != nil {
         Error.Fatalf("Unable to load client cert/keys: %s", err)
     }
 
-    rootCACert, err := ioutil.ReadFile("certs/ca.crt")
+    rootCACert, err := ioutil.ReadFile(dir + "/certs/ca.crt")
 
     if err != nil {
         Error.Fatalf("Unable to open CA cert: %s", err)
