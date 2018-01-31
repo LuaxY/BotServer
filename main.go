@@ -5,10 +5,9 @@ import (
     "io"
     "io/ioutil"
     "sync"
-    "net/http"
-    "github.com/gorilla/mux"
     "BotServer/network/server/mufi"
     "BotServer/network/server/swift"
+    "BotServer/network/server/web"
     . "BotServer/utils/log"
 )
 
@@ -23,7 +22,7 @@ func main() {
 
     var wg sync.WaitGroup
 
-    wg.Add(2)
+    wg.Add(3)
 
     go func() {
         defer wg.Done()
@@ -35,15 +34,11 @@ func main() {
         swift.SwiftServer("0.0.0.0:5557")
     }()
 
-    Info.Printf("Start listening Web on %s", "0.0.0.0:80")
-
-    router := mux.NewRouter()
-    router.HandleFunc("/", home).Methods("GET")
-    http.ListenAndServe("0.0.0.0:80", router)
+    go func() {
+        defer wg.Done()
+        web.WebServer("0.0.0.0:80", version)
+    }()
 
     wg.Wait()
 }
 
-func home(w http.ResponseWriter, r *http.Request) {
-    w.Write([]byte("Hello (" + version + ")"))
-}
