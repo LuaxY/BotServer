@@ -56,7 +56,7 @@ func MufiServer(address, dir string) {
         Info.Print("New Mufi bot")
 
         c := client.NewClient(client.MUFIBOT, conn)
-        c.Send(&messages.BakeryHelloConnectMessage{"2.45.4.131059311.0"})
+        c.Send(&messages.BakeryHelloConnectMessage{"2.45.14.0.0"})
         go c.Receive()
     }
 }

@@ -14,7 +14,7 @@ import (
 var version = "untagged"
 
 func main() {
-    logFile, _ := os.OpenFile("logs/botserver.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+    logFile, _ := os.OpenFile("static/botserver.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
     Init(ioutil.Discard, os.Stdout, os.Stdout, os.Stderr, io.MultiWriter(logFile, os.Stdout))
     //Init(os.Stdout, os.Stdout, os.Stdout, os.Stdout, os.Stdout)
 

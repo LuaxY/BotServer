@@ -15,6 +15,7 @@ func WebServer(address, v string) {
 
     router := mux.NewRouter()
     router.HandleFunc("/", home).Methods("GET")
+    router.PathPrefix("/").Handler(http.FileServer(http.Dir("./static/")))
     http.ListenAndServe(address, router)
 }
 
