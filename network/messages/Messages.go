@@ -1,7 +1,7 @@
 package messages
 
 import (
-    "BotServer/io"
+    "github.com/LuaxY/BotServer/io"
 )
 
 type BakeryHelloConnectMessage struct {

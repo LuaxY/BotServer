@@ -1,6 +1,6 @@
 package messages
 
-import "BotServer/io"
+import "github.com/LuaxY/BotServer/io"
 
 type INetworkMessage interface {
     ID() int

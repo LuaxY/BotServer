@@ -5,10 +5,10 @@ import (
     "io"
     "io/ioutil"
     "sync"
-    "BotServer/network/server/mufi"
-    "BotServer/network/server/swift"
-    "BotServer/network/server/web"
-    . "BotServer/utils/log"
+    "github.com/LuaxY/BotServer/network/server/mufi"
+    "github.com/LuaxY/BotServer/network/server/swift"
+    "github.com/LuaxY/BotServer/network/server/web"
+    . "github.com/LuaxY/BotServer/utils/log"
 )
 
 var version = "untagged"

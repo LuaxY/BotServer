@@ -1,6 +1,6 @@
 package network
 
-import "BotServer/network/messages"
+import "github.com/LuaxY/BotServer/network/messages"
 
 type IClient interface {
     Send(messages.INetworkMessage)

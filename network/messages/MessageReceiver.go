@@ -2,7 +2,7 @@ package messages
 
 import (
     "reflect"
-    "BotServer/io"
+    "github.com/LuaxY/BotServer/io"
 )
 
 type MessageReceiver struct {

@@ -4,9 +4,9 @@ import (
     "crypto/x509"
     "crypto/tls"
     "io/ioutil"
-    . "BotServer/utils/log"
-    "BotServer/network/client"
-    "BotServer/network/messages"
+    . "github.com/LuaxY/BotServer/utils/log"
+    "github.com/LuaxY/BotServer/network/client"
+    "github.com/LuaxY/BotServer/network/messages"
 )
 
 func MufiServer(address, dir string) {

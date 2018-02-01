@@ -2,9 +2,9 @@ package swift
 
 import (
     "net"
-    . "BotServer/utils/log"
-    "BotServer/network/client"
-    "BotServer/network/messages"
+    . "github.com/LuaxY/BotServer/utils/log"
+    "github.com/LuaxY/BotServer/network/client"
+    "github.com/LuaxY/BotServer/network/messages"
 )
 
 func SwiftServer(address string) {

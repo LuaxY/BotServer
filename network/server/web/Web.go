@@ -3,7 +3,7 @@ package web
 import (
     "net/http"
     "github.com/gorilla/mux"
-    . "BotServer/utils/log"
+    . "github.com/LuaxY/BotServer/utils/log"
 )
 
 var version string

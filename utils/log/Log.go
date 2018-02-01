@@ -2,9 +2,7 @@ package log
 
 import (
     "io"
-    _ "io/ioutil"
     "log"
-    _ "os"
 )
 
 var (

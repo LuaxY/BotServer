@@ -1,0 +1,45 @@
+language: go
+sudo: required
+services:
+- docker
+
+env:
+  global:
+  - IMAGE_NAME=eu.gcr.io/botserver-1337/botserver
+  - PROJECT=botserver-1337
+  - ZONE=europe-west1-b
+  - PATH=$PATH:${HOME}/google-cloud-sdk/bin
+  - CLOUDSDK_CORE_DISABLE_PROMPTS=1
+
+cache:
+  directories:
+  - "$HOME/google-cloud-sdk/"
+
+go:
+- 1.9
+
+before_install:
+- if [ ! -d ${HOME}/google-cloud-sdk ]; then
+     curl https://sdk.cloud.google.com | bash;
+  fi
+- curl -Lo kubectl https://storage.googleapis.com/kubernetes-release/release/v1.9.2/bin/linux/amd64/kubectl && chmod +x kubectl && sudo mv kubectl /usr/local/bin/
+- gcloud auth activate-service-account --key-file client-secret.json
+- gcloud config set project ${PROJECT}
+- VERSION=$(git rev-list HEAD --max-count=1 --abbrev-commit)
+
+install:
+- go get
+- GOOS=linux GOARCH=386 go build -ldflags "-X main.version=${VERSION}" -o botserver .
+
+before_script:
+- gcloud docker -- pull ${IMAGE_NAME} || true
+
+script:
+- docker build --pull --cache-from "${IMAGE_NAME}" --tag "${IMAGE_NAME}" .
+- docker tag "${IMAGE_NAME}" "${IMAGE_NAME}:latest"
+- docker tag "${IMAGE_NAME}" "${IMAGE_NAME}:${VERSION}"
+- gcloud docker -- push "${IMAGE_NAME}:latest"
+- gcloud docker -- push "${IMAGE_NAME}:${VERSION}"
+- gcloud container clusters get-credentials botserver --zone=$ZONE
+- kubectl apply -f deployment.yaml
+- kubectl set image deployment/botserver botserver=eu.gcr.io/botserver-1337/botserver:${VERSION}

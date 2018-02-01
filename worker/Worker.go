@@ -1,9 +1,9 @@
 package worker
 
 import (
-    "BotServer/network/messages"
-    "BotServer/network"
-    . "BotServer/utils/log"
+    "github.com/LuaxY/BotServer/network/messages"
+    "github.com/LuaxY/BotServer/network"
+    . "github.com/LuaxY/BotServer/utils/log"
     "crypto/aes"
     "crypto/cipher"
     "regexp"

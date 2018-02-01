@@ -1,17 +1,26 @@
-apiVersion: v1
-kind: Pod
+apiVersion: extensions/v1beta1
+kind: Deployment
 metadata:
   name: botserver
-  labels:
-    name: botserver
 spec:
-  containers:
-  - name: botserver
-    image: eu.gcr.io/botserver-1337/botserver:VERSION
-    ports:
-    - containerPort: 80
-    - containerPort: 5557
-    - containerPort: 6555
+  selector:
+    matchLabels:
+      app: botserver
+  replicas: 1
+  template:
+    metadata:
+      name: botserver
+      labels:
+        app: botserver
+    spec:
+      containers:
+      - name: botserver
+        image: eu.gcr.io/botserver-1337/botserver:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        - containerPort: 5557
+        - containerPort: 6555
 ---
 apiVersion: v1
 kind: Service
@@ -20,7 +29,7 @@ metadata:
 spec:
   type: LoadBalancer
   selector:
-    name: botserver
+    app: botserver
   ports:
   - name: web-80
     protocol: TCP

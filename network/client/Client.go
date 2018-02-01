@@ -2,11 +2,11 @@ package client
 
 import (
     "net"
-    "BotServer/io"
-    "BotServer/worker"
-    "BotServer/network"
-    "BotServer/network/messages"
-    . "BotServer/utils/log"
+    "github.com/LuaxY/BotServer/io"
+    "github.com/LuaxY/BotServer/worker"
+    "github.com/LuaxY/BotServer/network"
+    "github.com/LuaxY/BotServer/network/messages"
+    . "github.com/LuaxY/BotServer/utils/log"
 
     _ "fmt"
     _ "encoding/hex"
