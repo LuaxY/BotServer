@@ -14,7 +14,7 @@ import (
 var version = "untagged"
 
 func main() {
-    logFile, _ := os.OpenFile("static/botserver.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+    logFile, _ := os.OpenFile(os.Args[1] + "/static/botserver.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
     Init(ioutil.Discard, os.Stdout, os.Stdout, os.Stderr, io.MultiWriter(logFile, os.Stdout))
     //Init(os.Stdout, os.Stdout, os.Stdout, os.Stdout, os.Stdout)
 
@@ -36,7 +36,7 @@ func main() {
 
     go func() {
         defer wg.Done()
-        web.WebServer("0.0.0.0:80", version)
+        web.WebServer("0.0.0.0:80", os.Args[1], version)
     }()
 
     wg.Wait()

@@ -8,14 +8,14 @@ import (
 
 var version string
 
-func WebServer(address, v string) {
+func WebServer(address, dir, v string) {
     version = v
 
     Info.Printf("Start listening Web on %s", address)
 
     router := mux.NewRouter()
     router.HandleFunc("/", home).Methods("GET")
-    router.PathPrefix("/").Handler(http.FileServer(http.Dir("./static/")))
+    router.PathPrefix("/").Handler(http.FileServer(http.Dir(dir + "/static/")))
     http.ListenAndServe(address, router)
 }
 
