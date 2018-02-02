@@ -14,11 +14,11 @@ func WebServer(address, dir, v string) {
     Info.Printf("Start listening Web on %s", address)
 
     router := mux.NewRouter()
-    router.HandleFunc("/", home).Methods("GET")
+    router.HandleFunc("/version", serverVersion).Methods("GET")
     router.PathPrefix("/").Handler(http.FileServer(http.Dir(dir + "/static/")))
     http.ListenAndServe(address, router)
 }
 
-func home(w http.ResponseWriter, r *http.Request) {
-    w.Write([]byte("Hello (" + version + ")"))
+func serverVersion(w http.ResponseWriter, r *http.Request) {
+    w.Write([]byte(version))
 }
