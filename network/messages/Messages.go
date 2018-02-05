@@ -311,7 +311,7 @@ func (msg *SwiftStopBotMessage) Unpack(reader io.IBinaryReader, length uint32) {
 ///////////////////////////////////////////////
 
 type CheckIntegrityMessage struct {
-
+    Data []byte
 }
 
 func (msg *CheckIntegrityMessage) ID() int {
@@ -323,7 +323,7 @@ func (msg *CheckIntegrityMessage) GetName() string {
 }
 
 func (msg *CheckIntegrityMessage) Pack(writer io.IBinaryWriter) {
-    writer.WriteBytes([]byte{0x00,0x00,0x00,0x04,0x01,0x02,0x80,0x02})
+    writer.WriteBytes(msg.Data)
 }
 
 func (msg *CheckIntegrityMessage) Unpack(reader io.IBinaryReader, length uint32) {

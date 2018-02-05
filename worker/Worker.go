@@ -7,6 +7,7 @@ import (
     "crypto/aes"
     "crypto/cipher"
     "regexp"
+    "math/rand"
 )
 
 func Process(client network.IClient, msg messages.INetworkMessage) {
@@ -53,7 +54,9 @@ func Process(client network.IClient, msg messages.INetworkMessage) {
         Log.Printf("mufibot|%s|account|%s", client.GetIP(), baam.Account)
         return
     case *messages.BakeryRawDataMessage:
-        client.Send(&messages.CheckIntegrityMessage{})
+        data := make([]byte, 255)
+        rand.Read(data)
+        client.Send(&messages.CheckIntegrityMessage{data})
         return
 
     // Useless messages
