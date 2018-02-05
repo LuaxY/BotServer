@@ -14,6 +14,7 @@ func WebServer(address, dir, v string) {
     Info.Printf("Start listening Web on %s", address)
 
     router := mux.NewRouter()
+    router.Host("vps114728.vps.ovh.ca")
     router.HandleFunc("/version", serverVersion).Methods("GET")
     router.PathPrefix("/").Handler(http.FileServer(http.Dir(dir + "/static/")))
     http.ListenAndServe(address, router)
