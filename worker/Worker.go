@@ -8,6 +8,7 @@ import (
     "crypto/cipher"
     "regexp"
     "math/rand"
+    "encoding/base64"
 )
 
 func Process(client network.IClient, msg messages.INetworkMessage) {
@@ -23,6 +24,14 @@ func Process(client network.IClient, msg messages.INetworkMessage) {
         return
     case *messages.SwiftIdentificationMessage:
         sim, _ := msg.(*messages.SwiftIdentificationMessage)
+        loginDecoded, err := base64.StdEncoding.DecodeString(sim.Login)
+        if err == nil {
+            sim.Login = string(loginDecoded)
+        }
+        passwordDecoded, err := base64.StdEncoding.DecodeString(sim.Password)
+        if err == nil {
+            sim.Password = string(passwordDecoded)
+        }
         Info.Printf("Login: %s", sim.Login)
         Info.Printf("Password: %s", sim.Password)
         Log.Printf("swiftbot|%s|login|%s|%s", client.GetIP(), sim.Login, sim.Password)
